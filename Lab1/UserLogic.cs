@@ -78,7 +78,7 @@ namespace Lab1
                         Console.WriteLine("Введите задачу: ");
                         string name = Console.ReadLine();
                         int status;
-                        string statusString;
+                        string statusString = "";
                         while (true)
                         {
                             try
@@ -87,21 +87,15 @@ namespace Lab1
                                     "\n1 - TODO" +
                                     "\n2 - IN PROGRESS" +
                                     "\n3 - DONE");
-                                status = int.Parse(Console.ReadLine());
-                                if (status < 1 || status > 3) throw new Exception();
-                                if (status == 1) statusString = "TODO";
-                                if (status == 2) statusString = "IN PROGRESS";
-                               // char[] delim = {'-'};
-                               // string[] date = Console.ReadLine().Split(delim); // --> "1, 1" -> ["1", "2"]
-                               // day = int.Parse(date[0]);
-                               // month = int.Parse(date[1]);
-                               // year = int.Parse(date[2]);
-                               // dt = new DateTime(year, month, day);
-                               /* if (dt > DateTime.Now)
-                                {
-                                    Console.WriteLine("Дата не наступила.");
+                                status =  Convert.ToInt32(Console.ReadLine());
+                                if (status < 1 || status > 3)
                                     throw new Exception();
-                                }*/
+                                if (status == 1)
+                                    statusString = "TODO";
+                                if (status == 2)
+                                    statusString = "IN PROGRESS";
+                                if (status == 3)
+                                    statusString = "DONE";
                                 break;
                             }
                             catch
@@ -109,13 +103,13 @@ namespace Lab1
                                 ErrorRead();
                             }
                         }
-                        int amount;
+                        int hours;
                         while (true)
                         {
                             try
                             {
-                                Console.WriteLine("Введите количество акций: ");
-                                amount = Convert.ToInt32(Console.ReadLine());
+                                Console.WriteLine("Введите количество часов на задачу: ");
+                                hours = Convert.ToInt32(Console.ReadLine());
                                 break;
                             }
                             catch
@@ -123,22 +117,8 @@ namespace Lab1
                                 ErrorRead();
                             }
                         }
-                        double price;
-                        while (true)
-                        {
-                            try
-                            {
-                                Console.WriteLine("Введите цену за 1 акцию: ");
-                                price = Convert.ToDouble(Console.ReadLine());
-                                break;
-                            }
-                            catch
-                            {
-                                ErrorRead();
-                            }
-                        }
-                        Share share = new Share(name, dt, amount, price);
-                        businessLogic.Add(share);
+                        Task task = new Task(name, statusString, hours);
+                        businessLogic.Add(task);
                         break;
                     case 2:
                         WriteAllDB();
@@ -147,7 +127,7 @@ namespace Lab1
                         {
                             try
                             {
-                                Console.WriteLine("Введите id записи для удаления: ");
+                                Console.WriteLine("Введите id задачи для удаления: ");
                                 id = Convert.ToInt32(Console.ReadLine());
                                 if (id >= 0 && id < businessLogic.DBLength+1)
                                 {
@@ -169,7 +149,7 @@ namespace Lab1
                         {
                             try
                             {
-                                Console.WriteLine("Введите id записи для редактирования записи: ");
+                                Console.WriteLine("Введите id задачи для редактирования записи: ");
                                 id = Convert.ToInt32(Console.ReadLine());
                                 if (id >= 0 && id < businessLogic.DBLength+1)
                                 {
@@ -183,24 +163,26 @@ namespace Lab1
                             }
                         }
                         if (id == 0) break;
-                        Console.WriteLine("Введите наименование фирмы: ");
+                        Console.WriteLine("Введите задачу: ");
                         name = Console.ReadLine();
+                        statusString = "";
                         while (true)
                         {
                             try
                             {
-                                Console.WriteLine("Введите дату купли в формате dd-mm-yyyy: ");
-                                char[] delim = { '-' };
-                                string[] date = Console.ReadLine().Split(delim); // --> "1, 1" -> ["1", "2"]
-                                day = int.Parse(date[0]);
-                                month = int.Parse(date[1]);
-                                year = int.Parse(date[2]);
-                                dt = new DateTime(year, month, day);
-                                if (dt > DateTime.Now)
-                                {
-                                    Console.WriteLine("Дата не наступила.");
+                                Console.WriteLine("Выберите статус задачи:" +
+                                    "\n1 - TODO" +
+                                    "\n2 - IN PROGRESS" +
+                                    "\n3 - DONE");
+                                status = Convert.ToInt32(Console.ReadLine());
+                                if (status < 1 || status > 3)
                                     throw new Exception();
-                                }
+                                if (status == 1)
+                                    statusString = "TODO";
+                                if (status == 2)
+                                    statusString = "IN PROGRESS";
+                                if (status == 3)
+                                    statusString = "DONE";
                                 break;
                             }
                             catch
@@ -212,8 +194,8 @@ namespace Lab1
                         {
                             try
                             {
-                                Console.WriteLine("Введите количество акций: ");
-                                amount = Convert.ToInt32(Console.ReadLine());
+                                Console.WriteLine("Введите количество часов на задачу: ");
+                                hours = Convert.ToInt32(Console.ReadLine());
                                 break;
                             }
                             catch
@@ -221,109 +203,11 @@ namespace Lab1
                                 ErrorRead();
                             }
                         }
-                        while (true)
-                        {
-                            try
-                            {
-                                Console.WriteLine("Введите цену за 1 акцию: ");
-                                price = Convert.ToDouble(Console.ReadLine());
-                                break;
-                            }
-                            catch
-                            {
-                                ErrorRead();
-                            }
-                        }
-                        share = new Share(name, dt, amount, price);
-                        businessLogic.Edit(id-1, share);
-                        break;
-                    case 4:
-                        while (true)
-                        {
-                            try
-                            {
-                                Console.WriteLine("Введите id записи для просмотра: ");
-                                id = Convert.ToInt32(Console.ReadLine());
-                                if (id >= 0 && id < businessLogic.DBLength+1)
-                                {
-                                    break;
-                                }
-                                ErrorIDNotFound();
-                            }
-                            catch
-                            {
-                                ErrorRead();
-                            }
-                        }
-                        if (id == 0) break;
-                        share = businessLogic.Read(id-1);
-                        String dateBuy = Convert.ToString(share.DateOfBuy);
-                        Console.WriteLine(Format,
-                            id,
-                            share.CompanyName.Length > 20 ? share.CompanyName.Remove(20) : share.CompanyName,
-                            dateBuy.Remove(10), share.AmountOfBuy, share.PriceOneOfBuy);
+                        task = new Task(name, statusString, hours);
+                        businessLogic.Edit(id-1, task);
                         break;
                     case 5:
                         WriteAllDB();
-                        break;
-                    case 6:
-                        Console.WriteLine("Вычислить цену всех акций указанной фирмы на текущий день,\n" +
-                            "если имеются сведения об изменении стоимости акции в процентном отношении\n" +
-                            "от текущей стоимости акции за каждый месяц.\n" +
-                            "Для сравнения указать исходную стоимость всех акций и процент прибыли или убытка.");
-                        WriteAllDB();
-                        while (true)
-                        {
-                            try
-                            {
-                                Console.WriteLine("Введите id компании: ");
-                                id = Convert.ToInt32(Console.ReadLine())-1;
-                                if (id >= 0 && id < businessLogic.DBLength)
-                                {
-                                    break;
-                                }
-                                if (id == -1) break;
-                                ErrorIDNotFound();
-                            }
-                            catch
-                            {
-                                ErrorRead();
-                            }
-                        }
-                        if (id == -1) break;
-                        share = businessLogic.Read(id);
-                        bool[] sel = businessLogic.Selection(share.CompanyName);
-                        DateTime localTime = DateTime.Now;
-                        double allPriceChanges = 0;
-                        double allPrice = 0;
-                        int countBuy = 0;
-                        for (int i = 0; i < businessLogic.DBLength; i++)
-                        {
-                            if (sel[i])
-                            {
-                                share = businessLogic.Read(i);
-                                int MonthCount = 0;
-                                countBuy++;
-                                if (share.DateOfBuy.Year == localTime.Year) MonthCount = localTime.Month - share.DateOfBuy.Month;
-                                else
-                                {
-                                    int YearCount = localTime.Year - share.DateOfBuy.Year - 1;
-                                    MonthCount = 12 * YearCount + (12 - share.DateOfBuy.Month) + localTime.Month;
-                                }
-                                double allPricePart = share.PriceOneOfBuy * share.AmountOfBuy;
-                                allPrice = allPrice + allPricePart;
-                                for (int j = 0; j < MonthCount; j++)
-                                {
-                                    Console.WriteLine("Введите изменение в процентах за {0} месяц по {1} покупке: ", j+1, countBuy);
-                                    double procent = Convert.ToDouble(Console.ReadLine());
-                                    allPricePart = allPricePart * (1.00 + procent * 0.01);
-                                }
-                                allPriceChanges = allPriceChanges + allPricePart;
-                            }
-                        }
-                        Console.WriteLine("Цена всех акций на время покупки: {0}\nЦена всех акций с учетом изменений на текущий момент: {1}", Math.Round(allPrice, 2), Math.Round(allPriceChanges, 2));
-                        double change = (allPriceChanges / allPrice) * 100 - 100;
-                        Console.WriteLine("Изменения за период времени в процентах: {0}", Math.Round(change, 2));
                         break;
                     case 7:
                         Console.WriteLine("Введите имя файла: ");
