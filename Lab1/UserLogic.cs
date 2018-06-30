@@ -7,7 +7,7 @@ namespace Lab1
     {
         private const string Format = "|{0,5}|{1,30}|{2,5}|";
 
-        BusinessLogic businessLogic = new BusinessLogic();
+        DataLogic dataLogic = new DataLogic();
 
         List<string> Statuses = new List<string>() { "TODO", "IN PROGRESS", "DONE" };
 
@@ -23,7 +23,7 @@ namespace Lab1
 
         public void WriteAllDB()
         {
-            List<Task> DBList = businessLogic.ReadAll();
+            List<Task> DBList = dataLogic.ReadAll();
             for (int i = 1; i < 4; i++)
             {
                 Console.WriteLine(Statuses[i - 1]);
@@ -34,7 +34,8 @@ namespace Lab1
                     if (task.TaskStatus == i)
                     {
                         string taskName = task.TaskName.Length > 30 ? task.TaskName.Remove(30) : task.TaskName;
-                        Console.WriteLine(Format, DBList.IndexOf(task)+1, task.TaskName, task.TaskHours);
+                        Console.WriteLine(Format, 
+                            DBList.IndexOf(task)+1, task.TaskName, task.TaskHours);
                     }
 
                 }
@@ -60,7 +61,7 @@ namespace Lab1
                 try
                 {
                     k = Convert.ToInt32(Console.ReadLine());
-                    if ((k == 2 || k == 3 || k == 4 || k == 5) && businessLogic.DBLength == 0)
+                    if ((k == 2 || k == 3 || k == 4 || k == 5) && dataLogic.GetDBLength() == 0)
                     {
                         Console.WriteLine("Нет задач.\nНажмите any key для продолжения");
                         Console.ReadKey();
@@ -117,7 +118,7 @@ namespace Lab1
                             }
                         }
                         Task task = new Task(name, status, hours);
-                        businessLogic.Add(task);
+                        dataLogic.Create(task);
                         break;
                     case 2:
                         WriteAllDB();
@@ -128,7 +129,7 @@ namespace Lab1
                             {
                                 Console.WriteLine("Введите id задачи для удаления: ");
                                 id = Convert.ToInt32(Console.ReadLine());
-                                if (id >= 0 && id < businessLogic.DBLength+1)
+                                if (id >= 0 && id < dataLogic.GetDBLength()+1)
                                 {
                                     break;
                                 }
@@ -140,7 +141,7 @@ namespace Lab1
                             }
                         }
                         if (id == 0) break;
-                        businessLogic.Delete(id-1);
+                        dataLogic.Delete(id-1);
                         break;
                     case 3:
                         WriteAllDB();
@@ -150,7 +151,7 @@ namespace Lab1
                             {
                                 Console.WriteLine("Введите id задачи для редактирования записи: ");
                                 id = Convert.ToInt32(Console.ReadLine());
-                                if (id >= 0 && id < businessLogic.DBLength+1)
+                                if (id >= 0 && id < dataLogic.GetDBLength()+1)
                                 {
                                     break;
                                 }
@@ -196,7 +197,7 @@ namespace Lab1
                             }
                         }
                         task = new Task(name, status, hours);
-                        businessLogic.Edit(id-1, task);
+                        dataLogic.Update(id-1, task);
                         break;
                     case 4:
                         WriteAllDB();
@@ -206,7 +207,7 @@ namespace Lab1
                             {
                                 Console.WriteLine("Введите id задачи для изменения статуса: ");
                                 id = Convert.ToInt32(Console.ReadLine());
-                                if (id >= 0 && id < businessLogic.DBLength + 1)
+                                if (id >= 0 && id < dataLogic.GetDBLength() + 1)
                                 {
                                     break;
                                 }
@@ -218,7 +219,7 @@ namespace Lab1
                             }
                         }
                         if (id == 0) break;
-                        List<Task> DBList = businessLogic.ReadAll();
+                        List<Task> DBList = dataLogic.ReadAll();
                         name = "";
                         hours = 0;
                         foreach(Task i in DBList)
@@ -248,7 +249,7 @@ namespace Lab1
                             }
                         }
                         task = new Task(name, status, hours);
-                        businessLogic.Edit(id - 1, task);
+                        dataLogic.Update(id - 1, task);
                         break;
                     case 5:
                         WriteAllDB();
@@ -261,7 +262,7 @@ namespace Lab1
                             Console.WriteLine("Имя файла введено неверно.");
                             break;
                         }
-                        if (businessLogic.SaveFile(file))
+                        if (dataLogic.SaveFile(file))
                             Console.WriteLine("Файл сохранен.");
                         else
                             Console.WriteLine("Ошибка загрузки.");
@@ -274,7 +275,7 @@ namespace Lab1
                             Console.WriteLine("Имя файла введено неверно.");
                             break;
                         }
-                        if (businessLogic.LoadFile(file))
+                        if (dataLogic.LoadFile(file))
                             Console.WriteLine("Файл загружен.");
                         else
                             Console.WriteLine("Ошибка загрузки.");
