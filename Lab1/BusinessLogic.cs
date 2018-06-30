@@ -6,7 +6,7 @@ namespace Lab1
     {
         readonly DataLogic _dataLogic = new DataLogic() {};
 
-        public bool[] Selection(string companyName)
+    /*    public bool[] Selection(string companyName)
         {
             int length = _dataLogic.DBLength;
             bool[] selected = new bool[length];
@@ -14,16 +14,16 @@ namespace Lab1
                 if (_dataLogic.Read(i).CompanyName == companyName)
                     selected[i] = true;
             return selected;
+        }*/
+
+        internal void Add(Task task)
+        {
+            _dataLogic.Create(task);
         }
 
-        internal void Add(Share share)
+        public void Edit(int id, Task task)
         {
-            _dataLogic.Create(share);
-        }
-
-        public void Edit(int id, Share share)
-        {
-            _dataLogic.Update(id, share);
+            _dataLogic.Update(id, task);
         }
 
         public void Delete(int id)
@@ -33,9 +33,9 @@ namespace Lab1
 
         public int DBLength => _dataLogic.DBLength;
 
-        public Share Read(int id) => _dataLogic.Read(id);
+       // public Task Read(int id) => _dataLogic.Read(id);
 
-        public List<Share> ReadAll()
+        public List<Task> ReadAll()
         {
             return _dataLogic.ReadAll();
         }

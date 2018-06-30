@@ -10,20 +10,27 @@ namespace Lab1
 
         BusinessLogic businessLogic = new BusinessLogic();
 
-        public void ErrorRead() => Console.WriteLine("Неверный формат ввода.");
-        public void ErrorIDNotFound() => Console.WriteLine("Такого id не существует.");
+        public void ErrorRead()
+        {
+            Console.WriteLine("Неверный формат ввода.");
+        }
+
+        public void ErrorIDNotFound()
+        {
+            Console.WriteLine("Такого id не существует.");
+        }
 
         public void WriteAllDB()
         {
-            List<Share> DBList = businessLogic.ReadAll();
-            foreach (Share share in DBList)
+            List<Task> DBList = businessLogic.ReadAll();
+            foreach (Task task in DBList)
             {
-                if (share == null) continue;
-                string dateBuy = share.DateOfBuy.ToString().Remove(10);
+                if (task == null) continue;
+               /* string dateBuy = share.DateOfBuy.ToString().Remove(10);
                 string companyName = share.CompanyName.Length > 20 ? share.CompanyName.Remove(20) : share.CompanyName;
                Console.WriteLine(Format, DBList.IndexOf(share)+1,
                     share.CompanyName.Length > 20 ? share.CompanyName.Remove(20) : share.CompanyName,
-                    dateBuy, share.AmountOfBuy, share.PriceOneOfBuy); 
+                    dateBuy, share.AmountOfBuy, share.PriceOneOfBuy); */
             }
             DBList.Clear();
         }
@@ -34,12 +41,12 @@ namespace Lab1
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("1.Добавить акции");
-                Console.WriteLine("2.Удалить акции");
-                Console.WriteLine("3.Отредактировать запись");
-                Console.WriteLine("4.Просмотреть конкретную запись");
-                Console.WriteLine("5.Просмотреть все записи");
-                Console.WriteLine("6.Показать решение задачи");
+                Console.WriteLine("1.Добавить задачу");
+                Console.WriteLine("2.Удалить задачу");
+                Console.WriteLine("3.Отредактировать задачу");
+              //  Console.WriteLine("4.Просмотреть конкретную запись");
+                Console.WriteLine("5.Просмотреть все задачи");
+              //  Console.WriteLine("6.Показать решение задачи");
                 Console.WriteLine("7.Сохранить");
                 Console.WriteLine("8.Загрузить");
                 Console.WriteLine("0.Выход из любого меню");
@@ -49,7 +56,7 @@ namespace Lab1
                     k = Convert.ToInt32(Console.ReadLine());
                     if ((k == 2 || k == 3 || k == 4 || k == 5 || k == 6) && businessLogic.DBLength == 0)
                     {
-                        Console.WriteLine("База пуста.\nНажмите any key для продолжения");
+                        Console.WriteLine("Нет задач.\nНажмите any key для продолжения");
                         Console.ReadKey();
                         continue;
                     }
@@ -68,26 +75,33 @@ namespace Lab1
                 switch (k)
                 {
                     case 1:
-                        Console.WriteLine("Введите наименование фирмы: ");
+                        Console.WriteLine("Введите задачу: ");
                         string name = Console.ReadLine();
-                        int day, month, year;
-                        DateTime dt;
+                        int status;
+                        string statusString;
                         while (true)
                         {
                             try
                             { 
-                                Console.WriteLine("Введите дату покупки в формате dd-mm-yyyy: ");
-                                char[] delim = {'-'};
-                                string[] date = Console.ReadLine().Split(delim); // --> "1, 1" -> ["1", "2"]
-                                day = int.Parse(date[0]);
-                                month = int.Parse(date[1]);
-                                year = int.Parse(date[2]);
-                                dt = new DateTime(year, month, day);
-                                if (dt > DateTime.Now)
+                                Console.WriteLine("Выберите статус задачи:" +
+                                    "\n1 - TODO" +
+                                    "\n2 - IN PROGRESS" +
+                                    "\n3 - DONE");
+                                status = int.Parse(Console.ReadLine());
+                                if (status < 1 || status > 3) throw new Exception();
+                                if (status == 1) statusString = "TODO";
+                                if (status == 2) statusString = "IN PROGRESS";
+                               // char[] delim = {'-'};
+                               // string[] date = Console.ReadLine().Split(delim); // --> "1, 1" -> ["1", "2"]
+                               // day = int.Parse(date[0]);
+                               // month = int.Parse(date[1]);
+                               // year = int.Parse(date[2]);
+                               // dt = new DateTime(year, month, day);
+                               /* if (dt > DateTime.Now)
                                 {
                                     Console.WriteLine("Дата не наступила.");
                                     throw new Exception();
-                                }
+                                }*/
                                 break;
                             }
                             catch

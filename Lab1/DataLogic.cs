@@ -6,18 +6,18 @@ namespace Lab1
     {
         private readonly DataBaseFile _dataBaseFile = new DataBaseFile();
 
-        public void Create(Share share)
+        public void Create(Task task)
         {
-            _dataBaseFile.MainDataBase.Push(share);
+            _dataBaseFile.MainDataBase.Push(task);
         }
 
-        public Share Read(int id)
+       /* public Task Read(int id)
         {
             return _dataBaseFile.MainDataBase[id];
-        }
+        }*/
 
-        List<Share> db = new List<Share>();
-        public List<Share> ReadAll()
+        List<Task> db = new List<Task>();
+        public List<Task> ReadAll()
         {
             for (int i = 0; i < _dataBaseFile.MainDataBase.Length; i++)
             {
@@ -26,9 +26,9 @@ namespace Lab1
             return db;
         }
 
-        public bool Update(int id, Share share)
+        public bool Update(int id, Task task)
         {
-            _dataBaseFile.MainDataBase[id] = share;
+            _dataBaseFile.MainDataBase[id] = task;
             return true;
         }
 

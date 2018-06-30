@@ -5,18 +5,16 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Lab1
 {
     [Serializable]
-    sealed class Share //строка бд
+    sealed class Task
     {
-        public string CompanyName { get; set; }
-        public DateTime DateOfBuy { get; set; } 
-        public int AmountOfBuy { get; set; }
-        public double PriceOneOfBuy { get; set; }
-        public Share(string companyName, DateTime dateOfBuy, int amountOfBuy, double priceOneOfBuy)
+        public string TaskName { get; set; }
+        public string TaskStatus { get; set; } 
+        public int TaskHours { get; set; }
+        public Task(string taskName, string taskStatus, int taskHours)
         {
-            CompanyName = companyName;
-            DateOfBuy = dateOfBuy;
-            AmountOfBuy = amountOfBuy;
-            PriceOneOfBuy = priceOneOfBuy;
+            TaskName = taskName;
+            TaskStatus = taskStatus;
+            TaskHours = taskHours;
         }
     }
 
@@ -25,18 +23,18 @@ namespace Lab1
     class DataBase //односвязный список строк бд
     {
         [Serializable]
-        private class ShareList 
+        private class TaskList 
         {
-            private ShareList _next; //ссылка на следующий элемент в списке
-            private Share _element;
+            private TaskList _next; //ссылка на следующий элемент в списке
+            private Task _element;
             
-            public Share Element
+            public Task Element
             {
                 get { return _element; }
                 set { _element = value; }
             }
 
-            public ShareList Next
+            public TaskList Next
             {
                 get { return _next; }
                 set { _next = value; }
@@ -45,8 +43,8 @@ namespace Lab1
         }
 
         public int Length { get; private set; }
-        private ShareList _head;
-        private ShareList _tail;
+        private TaskList _head;
+        private TaskList _tail;
 
         public DataBase()
         {
@@ -56,12 +54,12 @@ namespace Lab1
             Length = 0;
         }
 
-        public void Push(Share element)
+        public void Push(Task element)
         {
             if (_head == null)
             {
                 // создать узел, сделать его головным
-                _head = new ShareList {Element = element};
+                _head = new TaskList {Element = element};
                 // этот же узел и является хвостовым
                 _tail = _head;
                 // следующего узла нет
@@ -70,7 +68,7 @@ namespace Lab1
             else
             {
                 // создать временный узел
-                ShareList tempBL = new ShareList();
+                TaskList tempBL = new TaskList();
                 // следующий за предыдущим хвостовым узлом - это наш временный новый узел
                 _tail.Next = tempBL;
                 // сделать его же новым хвостовым
@@ -90,8 +88,8 @@ namespace Lab1
             }
             else
             {
-                ShareList tempBL = _head;
-                ShareList prev = _head;
+                TaskList tempBL = _head;
+                TaskList prev = _head;
                 for (int i = 0; i < position + 1; ++i)
                 {
                     if (position > 0 && i == position - 1)
@@ -104,13 +102,13 @@ namespace Lab1
             GC.Collect();
         }
 
-        public Share this[int position]
+        public Task this[int position]
         {
             get
             {
                 if (position >= 0)
                 {
-                    ShareList tempBL = _head;
+                    TaskList tempBL = _head;
                     for (int i = 0; i < position; ++i)
                     {
                         // переходим к следующему узлу списка
@@ -127,7 +125,7 @@ namespace Lab1
             {
                 if (position >= 0)
                 {
-                    ShareList tempBL = _head;
+                    TaskList tempBL = _head;
                     for (int i = 0; i < position; ++i)
                         tempBL = tempBL.Next;
                     tempBL.Element = value;
