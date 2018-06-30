@@ -8,9 +8,9 @@ namespace Lab1
     sealed class Task
     {
         public string TaskName { get; set; }
-        public string TaskStatus { get; set; } 
+        public int TaskStatus { get; set; } 
         public int TaskHours { get; set; }
-        public Task(string taskName, string taskStatus, int taskHours)
+        public Task(string taskName, int taskStatus, int taskHours)
         {
             TaskName = taskName;
             TaskStatus = taskStatus;

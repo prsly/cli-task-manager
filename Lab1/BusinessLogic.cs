@@ -6,16 +6,6 @@ namespace Lab1
     {
         readonly DataLogic _dataLogic = new DataLogic() {};
 
-    /*    public bool[] Selection(string companyName)
-        {
-            int length = _dataLogic.DBLength;
-            bool[] selected = new bool[length];
-            for (int i = 0; i < length; i++)
-                if (_dataLogic.Read(i).CompanyName == companyName)
-                    selected[i] = true;
-            return selected;
-        }*/
-
         internal void Add(Task task)
         {
             _dataLogic.Create(task);
@@ -31,9 +21,13 @@ namespace Lab1
             _dataLogic.Delete(id);
         }
 
-        public int DBLength => _dataLogic.DBLength;
-
-       // public Task Read(int id) => _dataLogic.Read(id);
+        public int DBLength
+        {
+            get
+            {
+                return _dataLogic.GetDBLength();
+            }
+        }
 
         public List<Task> ReadAll()
         {

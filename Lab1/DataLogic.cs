@@ -11,11 +11,6 @@ namespace Lab1
             _dataBaseFile.MainDataBase.Push(task);
         }
 
-       /* public Task Read(int id)
-        {
-            return _dataBaseFile.MainDataBase[id];
-        }*/
-
         List<Task> db = new List<Task>();
         public List<Task> ReadAll()
         {
@@ -37,8 +32,11 @@ namespace Lab1
             _dataBaseFile.MainDataBase.Delete(id);
         }
 
-        public int DBLength => _dataBaseFile.MainDataBase.Length;   
-        
+        public int GetDBLength()
+        {
+            return _dataBaseFile.MainDataBase.Length;
+        }
+
         public bool LoadFile(string file)
         {
             return _dataBaseFile.Load(file);
