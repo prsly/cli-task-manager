@@ -5,10 +5,11 @@ namespace Lab1
 {
     sealed class UserLogic
     {
-
         private const string Format = "|{0,5}|{1,30}|{2,5}|";
 
         BusinessLogic businessLogic = new BusinessLogic();
+
+        List<string> Statuses = new List<string>() { "TODO", "IN PROGRESS", "DONE" };
 
         public void ErrorRead()
         {
@@ -19,12 +20,14 @@ namespace Lab1
         {
             Console.WriteLine("Такого id не существует.");
         }
-        List<string> statuses = new List<string>();
+
         public void WriteAllDB()
         {
             List<Task> DBList = businessLogic.ReadAll();
             for (int i = 1; i < 4; i++)
             {
+                Console.WriteLine(Statuses[i - 1]);
+                Console.WriteLine(Format, "ID", "Задача", "Часы");
                 foreach (Task task in DBList)
                 {
                     if (task == null) continue;
@@ -196,6 +199,57 @@ namespace Lab1
                         businessLogic.Edit(id-1, task);
                         break;
                     case 4:
+                        WriteAllDB();
+                        while (true)
+                        {
+                            try
+                            {
+                                Console.WriteLine("Введите id задачи для изменения статуса: ");
+                                id = Convert.ToInt32(Console.ReadLine());
+                                if (id >= 0 && id < businessLogic.DBLength + 1)
+                                {
+                                    break;
+                                }
+                                ErrorIDNotFound();
+                            }
+                            catch
+                            {
+                                ErrorRead();
+                            }
+                        }
+                        if (id == 0) break;
+                        List<Task> DBList = businessLogic.ReadAll();
+                        name = "";
+                        hours = 0;
+                        foreach(Task i in DBList)
+                        {
+                            if (DBList.IndexOf(i)+1 == id)
+                            {
+                                name = i.TaskName;
+                                hours = i.TaskHours;
+                            }
+                        }
+                        while (true)
+                        {
+                            try
+                            {
+                                Console.WriteLine("Выберите статус задачи:" +
+                                    "\n1 - TODO" +
+                                    "\n2 - IN PROGRESS" +
+                                    "\n3 - DONE");
+                                status = Convert.ToInt32(Console.ReadLine());
+                                if (status < 1 || status > 3)
+                                    throw new Exception();
+                                break;
+                            }
+                            catch
+                            {
+                                ErrorRead();
+                            }
+                        }
+                        task = new Task(name, status, hours);
+                        businessLogic.Edit(id - 1, task);
+                        break;
                     case 5:
                         WriteAllDB();
                         break;
